@@ -1,80 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:quiz_app/ApiService/authenticationServices/authenticationService.dart';
-import 'package:quiz_app/main.dart';
-import 'package:quiz_app/screens/home.dart';
-import 'package:quiz_app/screens/quizDetail/quizDetail.dart';
+import 'package:get/get.dart';
+import 'package:quiz_app/controllers/authenticationController/authenticationController.dart';
 import 'package:quiz_app/utils/AppColor.dart';
 import 'package:quiz_app/utils/AppStrings.dart';
 import 'package:quiz_app/utils/commonWidgets.dart';
 
-class Registration extends StatefulWidget {
-  const Registration({Key? key}) : super(key: key);
-
-  @override
-  State<Registration> createState() => _RegistrationState();
-}
-
-class _RegistrationState extends State<Registration> with TickerProviderStateMixin {
-  late TabController _tabController;
-  bool isRegistrationLoading = false;
-  bool isLoginLoading = false;
-  int selectedTab = 0;
-  TextEditingController? nameController;
-  TextEditingController? emailController;
-  TextEditingController? passwordController;
-  TextEditingController? loginEmailController;
-  TextEditingController? loginPasswordController;
-  final loginFormKey = GlobalKey<FormState>();
-  final registerFormKey = GlobalKey<FormState>();
-
-  FocusNode? fname;
-  FocusNode? pass;
-  FocusNode? email;
-  FocusNode? loginEmail;
-  FocusNode? loginPass;
-
-  String msg = "";
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _tabController = new TabController(length: 2, vsync: this, animationDuration: Duration.zero);
-    _tabController.addListener(() {
-      if (mounted) {
-        setState(() {
-          selectedTab = _tabController.index;
-        });
-      }
-    });
-    nameController = TextEditingController();
-    emailController = TextEditingController();
-    passwordController = TextEditingController();
-    loginEmailController = TextEditingController(
-    );
-    loginPasswordController = TextEditingController();
-    fname = FocusNode();
-
-    email = FocusNode();
-    pass = FocusNode();
-    loginEmail = FocusNode();
-    loginPass = FocusNode();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    fname!.dispose();
-
-    email!.dispose();
-    pass!.dispose();
-    loginEmail!.dispose();
-    loginPass!.dispose();
-
-    super.dispose();
-  }
-
+class Registrtaion extends GetView<AuthenticationController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,28 +15,28 @@ class _RegistrationState extends State<Registration> with TickerProviderStateMix
   }
 
   view(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(top: 50),
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      decoration: const BoxDecoration(gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.topRight, colors: [Colors.purple, Colors.deepPurpleAccent])),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CommonWidgets.getSizedBox(height: 15.0),
-          appBar(),
-          CommonWidgets.getSizedBox(height: 15.0),
-          welcomeText(),
-          CommonWidgets.getSizedBox(height: 15.0),
-          quizAppKnoweldegeText(),
-          CommonWidgets.getSizedBox(height: 5.0),
-          infoContainer(context),
-          CommonWidgets.getSizedBox(height: 15.0),
-          registrationContainer(context),
-        ],
-      ),
-    );
+    return Obx(() => Container(
+          padding: EdgeInsets.only(top: 50),
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          decoration: const BoxDecoration(gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.topRight, colors: [Colors.purple, Colors.deepPurpleAccent])),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CommonWidgets.getSizedBox(height: 15.0),
+              appBar(),
+              CommonWidgets.getSizedBox(height: 15.0),
+              welcomeText(),
+              CommonWidgets.getSizedBox(height: 15.0),
+              quizAppKnoweldegeText(),
+              CommonWidgets.getSizedBox(height: 5.0),
+              infoContainer(context),
+              CommonWidgets.getSizedBox(height: 15.0),
+              registrationContainer(context),
+            ],
+          ),
+        ));
   }
 
   appBar() {
@@ -228,53 +159,43 @@ class _RegistrationState extends State<Registration> with TickerProviderStateMix
     );
   }
 
-  studentNameTextformField() {
+  studentNameTextformField(context) {
     return CommonWidgets.getTextFormField(
       hintText: AppStrings.StudentNameText,
-      controller: nameController,
-      focusNode: fname,
+      controller: controller.nameController,
+      focusNode: controller.fname,
       keyboardAction: TextInputAction.next,
       keyboardType: TextInputType.name,
       submitted: (term) {
-        fname!.unfocus();
-        FocusScope.of(context).requestFocus(email);
+        controller.fname.unfocus();
+        FocusScope.of(context).requestFocus(controller.email);
       },
-/*      validator: (value) {
-        if (nameController!.text == null || nameController!.text.isEmpty) {
-          CommonWidgets.showToast(
-              toastGravity: ToastGravity.TOP,
-              toast: Toast.LENGTH_SHORT,
-              msg: "Please enter name "
-          );
-        }
-        return null;
-      },*/
     );
   }
 
-  studentEmailTextformField() {
+  studentEmailTextformField(context) {
     return CommonWidgets.getTextFormField(
       hintText: AppStrings.StudentEmailText,
-      controller: emailController,
-      focusNode: email,
+      controller: controller.emailController,
+      focusNode: controller.email,
       keyboardAction: TextInputAction.next,
       keyboardType: TextInputType.emailAddress,
       submitted: (term) {
-        email!.unfocus();
-        FocusScope.of(context).requestFocus(pass);
+        controller.email.unfocus();
+        FocusScope.of(context).requestFocus(controller.pass);
       },
     );
   }
 
-  choosePasswordTextFormFiled() {
+  choosePasswordTextFormFiled(context) {
     return CommonWidgets.getPasswordTextFormField(
       hintText: AppStrings.ChoosePassword,
-      controller: passwordController,
-      focusNode: pass,
+      controller: controller.passwordController,
+      focusNode: controller.pass,
       keyboardAction: TextInputAction.done,
       keyboardType: TextInputType.text,
       submitted: (term) {
-        pass!.unfocus();
+        controller.pass.unfocus();
       },
     );
   }
@@ -293,29 +214,24 @@ class _RegistrationState extends State<Registration> with TickerProviderStateMix
   }
 
   registerButton() {
-    return selectedTab == 0
+    return controller.selectedTab.value == 0
         ? GestureDetector(
             behavior: HitTestBehavior.translucent,
-            onTap: () async {
-              validationAndSumitRegisterData();
-            },
+            onTap: () async {},
             child: PhysicalModel(
               elevation: 6,
               color: AppColors.grey,
               borderRadius: BorderRadius.circular(40.0),
               child: CommonWidgets.getGradientButton(
-                  isLoading: isRegistrationLoading, btnText: "REGISTER", btnTextStyle: CommonWidgets.getTextStyle(fontSize: 15, textColor: AppColors.white)),
+                  isLoading: controller.isRegistrationLoading.value, btnText: "REGISTER", btnTextStyle: CommonWidgets.getTextStyle(fontSize: 15, textColor: AppColors.white)),
             ))
         : GestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: () {
-              if (selectedTab == 1) {
-                if (mounted)
-                  setState(() {
-                    selectedTab = _tabController.index - 1;
-                  });
+              if (controller.selectedTab.value == 1) {
+                controller.selectedTab.value = controller.tabController.index - 1;
 
-                _tabController.animateTo(selectedTab);
+                controller.tabController.animateTo(controller.selectedTab.value);
               }
             },
             child: CommonWidgets.getButton(btnText: "REGISTER", btnTextStyle: CommonWidgets.getTextStyle(fontSize: 15, textColor: AppColors.black)),
@@ -323,29 +239,24 @@ class _RegistrationState extends State<Registration> with TickerProviderStateMix
   }
 
   loginButton() {
-    return selectedTab == 1
+    return controller.selectedTab.value == 1
         ? GestureDetector(
             behavior: HitTestBehavior.translucent,
-            onTap: () async {
-              validationAndSumitloginData();
-            },
+            onTap: () async {},
             child: PhysicalModel(
               elevation: 6,
               color: AppColors.grey,
               borderRadius: BorderRadius.circular(40.0),
-              child:
-                  CommonWidgets.getGradientButton(isLoading: isLoginLoading, btnText: "Login", btnTextStyle: CommonWidgets.getTextStyle(fontSize: 15, textColor: AppColors.white)),
+              child: CommonWidgets.getGradientButton(
+                  isLoading: controller.isLoginLoading.value, btnText: "Login", btnTextStyle: CommonWidgets.getTextStyle(fontSize: 15, textColor: AppColors.white)),
             ))
         : GestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: () {
-              if (selectedTab == 0) {
-                if (mounted) {
-                  setState(() {
-                    selectedTab = _tabController.index + 1;
-                  });
-                }
-                _tabController.animateTo(selectedTab);
+              if (controller.selectedTab.value == 0) {
+                controller.selectedTab.value = controller.tabController.index + 1;
+
+                controller.tabController.animateTo(controller.selectedTab.value);
               }
             },
             child: CommonWidgets.getButton(btnText: "Login", btnTextStyle: CommonWidgets.getTextStyle(fontSize: 15, textColor: AppColors.black)),
@@ -371,14 +282,14 @@ class _RegistrationState extends State<Registration> with TickerProviderStateMix
                   text: "LOGIN",
                 )
               ],
-              controller: _tabController,
+              controller: controller.tabController,
               indicatorSize: TabBarIndicatorSize.tab,
             ),
           ),
           Expanded(
             child: TabBarView(
-              children: [registrationPage(), loginPage()],
-              controller: _tabController,
+              children: [registrationPage(context), loginPage(context)],
+              controller: controller.tabController,
             ),
           ),
         ],
@@ -386,53 +297,47 @@ class _RegistrationState extends State<Registration> with TickerProviderStateMix
     );
   }
 
-  registrationPage() {
+  registrationPage(context) {
     return SingleChildScrollView(
-      child: Form(
-        key: registerFormKey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CommonWidgets.getSizedBox(height: 15.0),
+          registerText(),
+          CommonWidgets.getSizedBox(height: 4.0),
+          withoutRegistrationText(),
+          CommonWidgets.getSizedBox(height: 15.0),
+          studentNameTextformField(context),
+          CommonWidgets.getSizedBox(height: 15.0),
+          studentEmailTextformField(context),
+          CommonWidgets.getSizedBox(height: 15.0),
+          choosePasswordTextFormFiled(context),
+          CommonWidgets.getSizedBox(height: 20.0),
+          authenticationButtons(),
+        ],
+      ),
+    );
+  }
+
+  loginPage(context) {
+    return Container(
+      child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CommonWidgets.getSizedBox(height: 15.0),
-            registerText(),
+            logintext(),
             CommonWidgets.getSizedBox(height: 4.0),
-            withoutRegistrationText(),
+            bySigningtext(),
             CommonWidgets.getSizedBox(height: 15.0),
-            studentNameTextformField(),
+            emailTextFormField(context),
             CommonWidgets.getSizedBox(height: 15.0),
-            studentEmailTextformField(),
-            CommonWidgets.getSizedBox(height: 15.0),
-            choosePasswordTextFormFiled(),
+            passwordTextFormField(context),
             CommonWidgets.getSizedBox(height: 20.0),
-            authenticationButtons(),
+            authenticationButtons()
           ],
-        ),
-      ),
-    );
-  }
-
-  loginPage() {
-    return Container(
-      child: SingleChildScrollView(
-        child: Form(
-          key: loginFormKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CommonWidgets.getSizedBox(height: 15.0),
-              logintext(),
-              CommonWidgets.getSizedBox(height: 4.0),
-              bySigningtext(),
-              CommonWidgets.getSizedBox(height: 15.0),
-              emailTextFormField(),
-              CommonWidgets.getSizedBox(height: 15.0),
-              passwordTextFormField(),
-              CommonWidgets.getSizedBox(height: 20.0),
-              authenticationButtons()
-            ],
-          ),
         ),
       ),
     );
@@ -479,168 +384,31 @@ class _RegistrationState extends State<Registration> with TickerProviderStateMix
   }
 
   // email TextField
-  emailTextFormField() {
+  emailTextFormField(context) {
     return CommonWidgets.getTextFormField(
       hintText: AppStrings.EnterEmailText,
-      controller: loginEmailController,
-      focusNode: loginEmail,
+      controller: controller.loginEmailController,
+      focusNode: controller.loginEmail,
       keyboardAction: TextInputAction.next,
       keyboardType: TextInputType.emailAddress,
       submitted: (term) {
-        loginEmail!.unfocus();
-        FocusScope.of(context).requestFocus(loginPass);
+        controller.loginEmail.unfocus();
+        FocusScope.of(context).requestFocus(controller.loginPass);
       },
     );
   }
 
   // password TextField
-  passwordTextFormField() {
+  passwordTextFormField(context) {
     return CommonWidgets.getPasswordTextFormField(
       hintText: AppStrings.PasswordText,
-      controller: loginPasswordController,
-      focusNode: loginPass,
+      controller: controller.loginPasswordController,
+      focusNode: controller.loginPass,
       keyboardAction: TextInputAction.done,
       keyboardType: TextInputType.text,
       submitted: (term) {
-        loginPass!.unfocus();
+        controller.loginPass.unfocus();
       },
     );
-  }
-
-  // validation for the register function
-  validationAndSumitRegisterData() {
-    if (nameController!.text == "") {
-      return CommonWidgets.showToast(toastGravity: ToastGravity.TOP, toast: Toast.LENGTH_SHORT, msg: "Please enter the name");
-    } else if (emailController!.text == "") {
-      return CommonWidgets.showToast(toastGravity: ToastGravity.TOP, toast: Toast.LENGTH_SHORT, msg: "Please enter the email");
-    } else if (CommonWidgets.validateEmail(emailController!.text) == false) {
-      return CommonWidgets.showToast(toastGravity: ToastGravity.TOP, toast: Toast.LENGTH_SHORT, msg: "Please enter valid email");
-    } else if (passwordController!.text == "") {
-      return CommonWidgets.showToast(toastGravity: ToastGravity.TOP, toast: Toast.LENGTH_SHORT, msg: "Please enter the password");
-    } else if (CommonWidgets.validatePassword(passwordController!.text) == false) {
-      return CommonWidgets.showToast(
-          toastGravity: ToastGravity.TOP,
-          toast: Toast.LENGTH_SHORT,
-          msg: "Eight characters including one uppercase letter, one lowercase letter, and one number or special character");
-    } else {
-      signUp();
-    }
-  }
-
-  // validation for the login function
-  validationAndSumitloginData() {
-    if (loginEmailController!.text == "") {
-      return CommonWidgets.showToast(toastGravity: ToastGravity.TOP, toast: Toast.LENGTH_SHORT, msg: "Please Enter the Email");
-    } else if (CommonWidgets.validateEmail(loginEmailController!.text) == false) {
-      return CommonWidgets.showToast(toastGravity: ToastGravity.TOP, toast: Toast.LENGTH_SHORT, msg: "Please enter valid email");
-
-    } else if (loginPasswordController!.text == "") {
-      return CommonWidgets.showToast(toastGravity: ToastGravity.TOP, toast: Toast.LENGTH_SHORT, msg: "Please enter the password");
-    } else if (CommonWidgets.validatePassword(loginPasswordController!.text) == false) {
-      return CommonWidgets.showToast(
-          toastGravity: ToastGravity.TOP,
-          toast: Toast.LENGTH_SHORT,
-          msg: "Eight characters including one uppercase letter, one lowercase letter, and one number or special character");
-    }
-    signIn();
-  }
-
-  // register function
-  signUp() async {
-    isRegistrationLoading = true;
-    if (mounted) {
-      setState(() {});
-    }
-    var data = await AuthenticationServices.signup(
-      email: emailController!.text,
-      name: nameController!.text,
-      password: passwordController!.text,
-    );
-    if (data != null) {
-      if (data.data != null) {
-        isRegistrationLoading = false;
-        if (mounted) {
-          setState(() {});
-        }
-        nameController!.clear();
-        emailController!.clear();
-        passwordController!.clear();
-        CommonWidgets.showSnackBar(context, " Succesfully registered......");
-
-        if (selectedTab == 0) {
-          if (mounted) {
-            setState(() {
-              selectedTab = _tabController.index + 1;
-            });
-          }
-          _tabController.animateTo(selectedTab);
-        }
-      } else {
-        CommonWidgets.showSnackBar(context, "Something went wrong please try again!");
-        isLoginLoading = false;
-        if (mounted) {
-          setState(() {});
-        }
-      }
-    } else {
-      isRegistrationLoading = false;
-      CommonWidgets.showSnackBar(context, "Something went wrong please try again!");
-
-      if (mounted) {
-        setState(() {});
-      }
-    }
-  }
-
-  //log in function
-  signIn() async {
-    isLoginLoading = true;
-    if (mounted) {
-      setState(() {});
-    }
-    try {
-      var data = await AuthenticationServices.login(
-        email: loginEmailController!.text,
-        password: loginPasswordController!.text,
-      );
-
-      if (data != null) {
-        var loginData = data.data;
-        if (loginData != null) {
-          isLoginLoading = false;
-          loginEmailController!.clear();
-          loginPasswordController!.clear();
-
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => prefs!.getString("role") == "admin"
-                      ? HomeScreen()
-                      : prefs!.getBool("isALreadyLoggedIn") == true
-                          ? HomeScreen(userName: loginData.name!)
-                          : QuizDetail(
-                              userName: loginData.name!,
-                            )));
-
-          CommonWidgets.showSnackBar(context, " Succesfully logged in......");
-        } else {
-          isLoginLoading = false;
-          if (mounted) {
-            setState(() {});
-          }
-        }
-      } else {
-        isLoginLoading = false;
-        if (mounted) {
-          setState(() {});
-        }
-      }
-    } catch (e) {
-      isLoginLoading = false;
-      if (mounted) {
-        setState(() {});
-      }
-      print(e.toString());
-    }
   }
 }

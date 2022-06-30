@@ -1,30 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:quiz_app/Routes/appRoutes.dart';
+import 'package:quiz_app/bindings/authenticationBindings/authenticationBinding.dart';
+import 'package:quiz_app/dbHelper/dpHelper.dart';
+import 'package:quiz_app/pages.dart';
 
-import 'package:quiz_app/spashScreen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-SharedPreferences? prefs;
+final quizAppDb = DatabaseHelper();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  prefs = await SharedPreferences.getInstance();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((value) => runApp(MyApp()));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
+      getPages: appPages,
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: SplashScreen(),
+      initialRoute: AppRoutes.Splash.name,
+      initialBinding: AuthenticationBinding(),
     );
   }
 }

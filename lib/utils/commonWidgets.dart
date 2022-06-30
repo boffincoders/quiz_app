@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart' as http;
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/snackbar/snackbar.dart';
 import 'package:http/http.dart';
 import 'package:quiz_app/utils/AppColor.dart';
 
@@ -114,16 +116,20 @@ class CommonWidgets {
     );
   }
 
-  static getButton({String? btnText, TextStyle? btnTextStyle}) {
+  static getButton({String? btnText, TextStyle? btnTextStyle, bool? isLoading}) {
     return Container(
       alignment: Alignment.center,
       height: 45,
       width: 150,
       decoration: BoxDecoration(border: Border.all(color: Colors.lightBlueAccent), borderRadius: BorderRadius.circular(40.0), color: AppColors.white),
-      child: Text(
-        btnText!,
-        style: btnTextStyle,
-      ),
+      child: isLoading!
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : Text(
+              btnText!,
+              style: btnTextStyle,
+            ),
     );
   }
 
@@ -144,18 +150,6 @@ class CommonWidgets {
               btnText!,
               style: btnTextStyle,
             ),
-    );
-  }
-
-  static showToast({ToastGravity? toastGravity, Toast? toast, String? msg}) {
-    return Fluttertoast.showToast(
-      msg: msg!,
-      toastLength: toast,
-      gravity: toastGravity,
-      timeInSecForIosWeb: 1,
-      backgroundColor: AppColors.textGradientColor,
-      textColor: AppColors.white,
-      fontSize: 16.0,
     );
   }
 
@@ -187,15 +181,42 @@ class CommonWidgets {
     }
   }
 
-  static showSnackBar(BuildContext context, String msg) {
-    return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      backgroundColor: AppColors.gradientColor,
-      content: Text(
-        msg,
-        style: const TextStyle(color: Colors.white, fontSize: 15),
-      ),
-      duration: const Duration(seconds: 3),
-    ));
+  static showSnackBar(String message) {
+    Get.snackbar(message, "",
+        titleText:const  SizedBox(
+          height: 0,
+        ),
+        messageText: Align(
+          alignment: Alignment.center,
+          child: Text(
+            message,
+            style: TextStyle(color: AppColors.white, fontSize: 15),
+          ),
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 6),
+        backgroundColor: AppColors.textGradientColor,
+        colorText: AppColors.black,
+        forwardAnimationCurve: Curves.fastOutSlowIn,
+        snackPosition: SnackPosition.BOTTOM);
+  }
+
+  static showToast(String message) {
+    Get.snackbar(message, "",
+        titleText: const SizedBox(
+          height: 0,
+        ),
+        messageText: Align(
+          alignment: Alignment.center,
+          child: Text(
+            message,
+            style: TextStyle(color: AppColors.white, fontSize: 15),
+          ),
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 6),
+        backgroundColor: AppColors.textGradientColor,
+        colorText: AppColors.black,
+        forwardAnimationCurve: Curves.fastOutSlowIn,
+        snackPosition: SnackPosition.TOP);
   }
 
   static int? checkStatus(Response response) {
@@ -227,7 +248,6 @@ class CommonWidgets {
     return statusCode;
   }
 
-
   static getAddQuestionTextFormField(
       {TextEditingController? controller,
       String? hintText,
@@ -241,7 +261,7 @@ class CommonWidgets {
     return Row(
       children: [
         Container(
-          margin: EdgeInsets.symmetric(horizontal: 15.0),
+          margin: const EdgeInsets.symmetric(horizontal: 15.0),
           alignment: Alignment.center,
           padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
           decoration: BoxDecoration(
