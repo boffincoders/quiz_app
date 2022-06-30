@@ -48,7 +48,7 @@ class ResultScreen extends GetView<ResultController> {
 
   appBar(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
       height: 50,
       child: ListTile(
         leading: GestureDetector(
@@ -61,14 +61,15 @@ class ResultScreen extends GetView<ResultController> {
             color: AppColors.white,
           ),
         ),
-        title: Center(
-            child: Text(
-          " Final Score of the Quiz",
-          style: CommonWidgets.getTextStyle(fontSize: 20, textColor: AppColors.white),
-        )),
-        trailing: CircleAvatar(
-          backgroundColor: AppColors.grey,
+        title: Padding(
+          padding: const EdgeInsets.only(right: 60.0),
+          child: Text(
+            " Final Score of the Quiz",
+            textAlign: TextAlign.center,
+            style: CommonWidgets.getTextStyle(fontSize: 20, textColor: AppColors.white),
+          ),
         ),
+
       ),
     );
   }

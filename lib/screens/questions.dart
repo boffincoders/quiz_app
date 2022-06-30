@@ -234,7 +234,7 @@ class QuestionPaper extends GetView<QuestionPaperAnswerController> {
                   child: Text("${time.min ?? "00"}:${time.sec.toString().padLeft(2, '0')}", style: const TextStyle(fontSize: 24.0)),
                 ),
                 CommonWidgets.getSizedBox(height: 8),
-                Text("Ques" "${controller.selectedIndex.value + 1}",
+                Text("Question" "${controller.selectedIndex.value + 1}",
                     style: CommonWidgets.getTextStyle(textColor: AppColors.textGradientColor, fontSize: 22, fontWeight: FontWeight.w600)),
                 CommonWidgets.getSizedBox(height: 8),
                 Text(questionList.question!, style: CommonWidgets.getTextStyle(textColor: AppColors.black, fontSize: 18)),

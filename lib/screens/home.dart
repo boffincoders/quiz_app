@@ -42,7 +42,6 @@ class HomeScreen extends GetView<HomeController> {
               appBar(),
               CommonWidgets.getSizedBox(height: 20.0),
               CommonWidgets.getSizedBox(height: 15.0),
-              CommonWidgets.getSizedBox(height: 15.0),
               selectQuizView(context)
             ],
           ),
@@ -71,9 +70,6 @@ class HomeScreen extends GetView<HomeController> {
               color: AppColors.white,
             ),
           ),
-          CircleAvatar(
-            backgroundColor: AppColors.grey,
-          )
         ],
       ),
     );
